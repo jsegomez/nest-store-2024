@@ -1,27 +1,39 @@
-import { Body, Controller, Delete, Get, Headers, Post, Put, Query } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Headers, HttpCode, HttpStatus, ParseIntPipe, Post, Put, Query
+} from '@nestjs/common';
+import { CreateProdcutDTO } from 'src/dtos/product.dto';
 
-import { Product } from 'src/interfaces/product.interface';
+import { Product } from 'src/entities/product.entity';
+import { ProductService } from 'src/services/product/product.service';
 
 @Controller('products')
 export class ProductsController {
+    constructor(
+        private productServ: ProductService
+    ){}
+
     @Get('all')
-    getAll(): string{
-        return 'Devuelve todos los productos';
+    getAll(): Product[] {
+        return this.productServ.findAll();
     }
 
     @Get('details')
-    getById(@Query('id') id: string): string{
-        return 'Devuelve producto por Id:' + id;
+    getById(@Query('id', ParseIntPipe) id: number): Product {
+        return this.productServ.findOne(id);
     }
 
-
     @Post('create')
-    createProduct(@Body() data:Product): Product{
-        return data;
+    @HttpCode(HttpStatus.CREATED)
+    createProduct(@Body() data: CreateProdcutDTO): Product {
+        return this.productServ.create(data);
     }
 
     @Put('update')
-    updateProduct(@Headers('id') id: string, @Body() data:Product){
+    updateProduct(@Headers('id') id: string, @Body() data: Product) {
         return {
             data,
             id
@@ -29,7 +41,7 @@ export class ProductsController {
     }
 
     @Delete()
-    deleleProduct(){
-        return 'delete';
+    deleleProduct(@Query('id', ParseIntPipe) id: number):boolean {
+        return this.productServ.deleteById(id);
     }
 }

@@ -2,6 +2,8 @@ export interface Product {
     id: number
     name: string;    
     price: number;
-    quantity: number;
-    avaliable: boolean
+    description: string;
+    stock: number;
+    avaliable: boolean,
+    url: string
 }
