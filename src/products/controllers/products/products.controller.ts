@@ -5,10 +5,10 @@ import {
     Get,
     Headers, HttpCode, HttpStatus, ParseIntPipe, Post, Put, Query
 } from '@nestjs/common';
-import { CreateProdcutDTO } from 'src/dtos/product.dto';
+import { CreateProdcutDTO } from 'src/products/dtos/product.dto';
 
-import { Product } from 'src/entities/product.entity';
-import { ProductService } from 'src/services/product/product.service';
+import { Product } from 'src/products/entities/product.entity';
+import { ProductService } from 'src/products/services/product/product.service';
 
 @Controller('products')
 export class ProductsController {
