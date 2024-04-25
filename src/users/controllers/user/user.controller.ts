@@ -26,8 +26,8 @@ export class UserController {
         return this.userServ.findOne(id);
     }
 
-    @Get('orders')
-    getOrders(@Query('id', ParseIntPipe) id: number):Order{
-        return this.userServ.getOrdersByUser(id);
-    }
+    // @Get('orders')
+    // getOrders(@Query('id', ParseIntPipe) id: number):Order{
+    //     return this.userServ.getOrdersByUser(id);
+    // }
 }

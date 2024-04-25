@@ -1,16 +1,27 @@
 import { Global, Module } from '@nestjs/common';
-
+import { ConfigType } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import config from 'config';
 
 @Global()
 @Module({
-    providers: [
-        {
-            provide: 'API_KEY',
-            useValue: 'Este es la clave que debo enviar'
-        }
+    imports: [
+        MongooseModule.forRootAsync({
+            useFactory: (configServ: ConfigType<typeof config>) => {                
+                const { user, password, dbName, port, uri } = configServ.database;
+                
+                return {
+                    uri: `${uri}:${port}`, 
+                    user,
+                    pass: password,
+                    dbName
+                }
+            },
+            inject: [config.KEY]
+        })
     ],
     exports: [
-        'API_KEY'
+        MongooseModule
     ]
 })
 export class DatabaseModule {}

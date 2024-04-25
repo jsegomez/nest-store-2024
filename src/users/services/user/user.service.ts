@@ -3,7 +3,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { dataUser } from './user.data';
 import { User } from 'src/users/entities/user.entity';
 import { CreateUserDTO } from 'src/users/dtos/user.dto';
-import { Order } from 'src/users/entities/order.entity';
 import { ProductService } from 'src/products/services/product/product.service';
 
 
@@ -39,17 +38,5 @@ export class UserService {
 
         this.users = this.users.filter(user => user.id != id);
         return true;
-    }
-
-    getOrdersByUser(id: number): Order{
-        const user = this.users.find(user => user.id == id);
-        if(!user) throw new NotFoundException(`Usuario con id: ${id} no fue encontrado.`);
-        const products = this.productServ.findAll();
-
-        return {
-            date: new Date(),
-            user,
-            products
-        }
     }
 }

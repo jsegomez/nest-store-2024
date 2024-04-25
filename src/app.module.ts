@@ -18,10 +18,11 @@ import * as Joi from 'joi';
       load: [config],
       isGlobal: true,
       validationSchema: Joi.object({
+        DATABASE_USER: Joi.string().required(),
+        DATABASE_PASSWORD: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
-        MULTIMEDIA: Joi.string().required(),
-        API_KEY: Joi.string().required()
+        DABASE_URL: Joi.string().required(),
       })
     })
 

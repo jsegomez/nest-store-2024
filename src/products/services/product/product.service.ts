@@ -1,55 +1,32 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from 'src/products/entities/product.entity';
-import { dataProducts } from './data-products';
 import { CreateProdcutDTO } from 'src/products/dtos/product.dto';
-import { ConfigType } from '@nestjs/config';
-import config from 'config';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
 
 @Injectable()
 export class ProductService {
-    private products:Product[] = dataProducts;
-
     constructor(
-        @Inject('API_KEY') private apiKeyGlobal: string,        
-        @Inject(config.KEY) private configServ: ConfigType<typeof config>
-    ){}
+        @InjectModel(Product.name) private productModel: Model<Product>
+    ){}    
 
-    findAll():Product[]{
-        return this.products;
+    async findAll(): Promise<Product[]>{
+        return await this.productModel.find().exec();
     }
 
-    findOne(productId: number):Product{
-        const product = this.products.find(product => product.id == productId)
-        if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado.`);
-        return product;
+    async findOne(productId: string):Promise<Product>{
+        return await this.productModel.findById(productId).exec()
     }
 
-    create(product: CreateProdcutDTO):Product{
-        const id = this.products.length + 1;
-
-        const newProduct: Product = {            
-            ...product,
-            id: id,
-            name: `Producto ${id}`,
-            description: `Descripción de producto ${id}`,
-            url: `Url producto ${id}`
-        }
-        this.products.push(newProduct);
-        return newProduct;
+    async create(product: CreateProdcutDTO): Promise<Product>{
+        return await this.productModel.create(product);
     }
 
-    deleteById(productId: number):boolean{
-        const product = this.products.find(prod => prod.id == productId);
-        if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado.`);
-        this.products = this.products.filter(product => productId != product.id);
-        return true;
-    }    
-
-    globalModuleServ(): string{
-        return this.apiKeyGlobal;
-    }
-
-    configService():string{
-        return this.configServ.database.port;
-    }
+    // deleteById(productId: number):boolean{
+    //     const product = this.products.find(prod => prod.id == productId);
+    //     if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado.`);
+    //     this.products = this.products.filter(product => productId != product.id);
+    //     return true;
+    // }    
 }

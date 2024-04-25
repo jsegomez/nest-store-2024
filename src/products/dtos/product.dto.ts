@@ -9,14 +9,14 @@ export class CreateProdcutDTO{
     @ApiProperty({description: "name of product"})
     readonly name: string;
 
+    @IsString()
+    @ApiProperty({description: "Description product"})
+    readonly description: string;
+
     @IsNumber()
     @IsPositive()
     @ApiProperty({description: "Price of product"})
     readonly price: number;
-
-    @IsString()
-    @ApiProperty({description: "Description product"})
-    readonly description: string;
 
     @IsNumber()
     @IsPositive()
@@ -29,7 +29,7 @@ export class CreateProdcutDTO{
 
     @IsUrl()
     @ApiProperty({description: "url image"})
-    readonly url: string
+    readonly image: string
 }
 
 export class UpdateProductDTO extends PartialType(CreateProdcutDTO){}
