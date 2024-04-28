@@ -17,11 +17,13 @@ import * as Joi from 'joi';
       envFilePath: environments[process.env.NODE_ENV],
       load: [config],
       isGlobal: true,
-      validationSchema: Joi.object({
+      validationSchema: Joi.object({        
+        DATABASE_TYPE: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
-        MULTIMEDIA: Joi.string().required(),
-        API_KEY: Joi.string().required()
+        DATABASE_HOST: Joi.string().required(),
+        DATABASE_USER: Joi.string().required(),
+        DATABASE_PASSWORD: Joi.string().required(),
       })
     })
 

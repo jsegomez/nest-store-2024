@@ -1,9 +1,25 @@
-export interface Product {
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
+export class Product {
+    @PrimaryGeneratedColumn()    
     id: number
+
+    @Column({type: 'varchar', length: 255, unique: true})
     name: string;    
-    price: number;
+
+    @Column({type: 'text'})
     description: string;
+
+    @Column({type: 'money'})
+    price: number;
+
+    @Column({type: 'smallint'})
     stock: number;
-    avaliable: boolean,
-    url: string
+
+    @Column({type: 'boolean'})
+    avaliable: boolean;
+
+    @Column({type: 'varchar'})
+    image: string
 }

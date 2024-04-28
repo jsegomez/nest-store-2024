@@ -41,15 +41,15 @@ export class UserService {
         return true;
     }
 
-    getOrdersByUser(id: number): Order{
-        const user = this.users.find(user => user.id == id);
-        if(!user) throw new NotFoundException(`Usuario con id: ${id} no fue encontrado.`);
-        const products = this.productServ.findAll();
+    // getOrdersByUser(id: number): Order{
+    //     const user = this.users.find(user => user.id == id);
+    //     if(!user) throw new NotFoundException(`Usuario con id: ${id} no fue encontrado.`);
+    //     const products = this.productServ.findAll();
 
-        return {
-            date: new Date(),
-            user,
-            products
-        }
-    }
+    //     return {
+    //         date: new Date(),
+    //         user,
+    //         products
+    //     }
+    // }
 }

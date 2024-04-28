@@ -1,55 +1,43 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Product } from 'src/products/entities/product.entity';
-import { dataProducts } from './data-products';
 import { CreateProdcutDTO } from 'src/products/dtos/product.dto';
-import { ConfigType } from '@nestjs/config';
-import config from 'config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
-    private products:Product[] = dataProducts;
-
     constructor(
-        @Inject('API_KEY') private apiKeyGlobal: string,        
-        @Inject(config.KEY) private configServ: ConfigType<typeof config>
+        @InjectRepository(Product) private productRepo: Repository<Product>
     ){}
 
-    findAll():Product[]{
-        return this.products;
+    async findAll():Promise<Product[]>{        
+        return await this.productRepo.find();
     }
 
-    findOne(productId: number):Product{
-        const product = this.products.find(product => product.id == productId)
-        if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado.`);
-        return product;
-    }
-
-    create(product: CreateProdcutDTO):Product{
-        const id = this.products.length + 1;
-
-        const newProduct: Product = {            
-            ...product,
-            id: id,
-            name: `Producto ${id}`,
-            description: `Descripción de producto ${id}`,
-            url: `Url producto ${id}`
+    async findOne(productId: number):Promise<Product>{
+        const product = await this.productRepo.findOneBy({id: productId});
+        if(product){
+            return product;
         }
-        this.products.push(newProduct);
-        return newProduct;
+
+        throw new NotFoundException(`Producto con id: ${productId} no fue encontrado`);
     }
 
-    deleteById(productId: number):boolean{
-        const product = this.products.find(prod => prod.id == productId);
-        if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado.`);
-        this.products = this.products.filter(product => productId != product.id);
-        return true;
-    }    
+    async create(product: CreateProdcutDTO):Promise<Product>{                
+        const verifyName = await this.productRepo.findOneBy({name: product.name});
 
-    globalModuleServ(): string{
-        return this.apiKeyGlobal;
+        if(verifyName){
+            throw new BadRequestException(`Producto con nombre: '${product.name}' ya existe en la base de datos`);
+        }
+
+        try {
+            return await this.productRepo.save(product);
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
 
-    configService():string{
-        return this.configServ.database.port;
-    }
+    // deleteById(productId: number):boolean{
+
+    // }    
 }
