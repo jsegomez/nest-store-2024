@@ -1,13 +1,13 @@
 import {
     Body,
-    Controller,
-    Delete,
+    Controller,    
+    Delete,    
     Get,
-    Headers, HttpCode, HttpStatus, ParseIntPipe, Post, Put, Query
+    HttpCode, HttpStatus, ParseIntPipe, Post, Put, Query
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 
-import { CreateProdcutDTO } from 'src/products/dtos/product.dto';
+import { CreateProdcutDTO, UpdateProductDTO } from 'src/products/dtos/product.dto';
 import { Product } from 'src/products/entities/product.entity';
 import { ProductService } from 'src/products/services/product/product.service';
 
@@ -36,18 +36,18 @@ export class ProductsController {
         return this.productServ.create(data);
     }
 
-    // @Put('update')
-    // @ApiOperation({ summary: "Update product" })
-    // updateProduct(@Headers('id') id: string, @Body() data: Product) {
-    //     return {
-    //         data,
-    //         id
-    //     };
-    // }
+    @Put('update')
+    @ApiOperation({ summary: "Update product" })
+    updateProduct(
+        @Query('id', ParseIntPipe) id: number,
+        @Body() data: UpdateProductDTO
+    ):Promise<Product> {
+        return this.productServ.update(id, data);
+    }
 
-    // @Delete()
-    // @ApiOperation({ summary: "Delete product by id" })
-    // deleleProduct(@Query('id', ParseIntPipe) id: number):boolean {
-    //     return this.productServ.deleteById(id);
-    // }
+    @Delete()
+    @ApiOperation({ summary: "Delete product by id" })
+    deleleProduct(@Query('id', ParseIntPipe) id: number):Promise<boolean> {
+        return this.productServ.deleteById(id);
+    }
 }

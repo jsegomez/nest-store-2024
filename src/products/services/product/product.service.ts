@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Product } from 'src/products/entities/product.entity';
-import { CreateProdcutDTO } from 'src/products/dtos/product.dto';
+import { CreateProdcutDTO, UpdateProductDTO } from 'src/products/dtos/product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -31,13 +31,26 @@ export class ProductService {
         }
 
         try {
-            return await this.productRepo.save(product);
+            const newProduct:Product = this.productRepo.create(product);
+            return this.productRepo.save(newProduct);
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
     }
 
-    // deleteById(productId: number):boolean{
+    async update(id: number, changes: UpdateProductDTO):Promise<Product>{                
+        const product = await this.findOne(id);
+        try {
+            this.productRepo.merge(product, changes);
+            return this.productRepo.save(product)
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
 
-    // }    
+    async deleteById(productId: number):Promise<boolean>{
+        const productToDelete = await this.findOne(productId);
+        await this.productRepo.delete(productToDelete.id)
+        return true
+    }    
 }
