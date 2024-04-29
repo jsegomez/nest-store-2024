@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from 'src/products/entities/product.entity';
-import { CreateProdcutDTO } from 'src/products/dtos/product.dto';
+import { CreateProdcutDTO, UpdateProductDTO } from 'src/products/dtos/product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -16,17 +16,23 @@ export class ProductService {
     }
 
     async findOne(productId: string):Promise<Product>{
-        return await this.productModel.findById(productId).exec()
+        return await this.productModel.findById(productId).exec();
     }
 
     async create(product: CreateProdcutDTO): Promise<Product>{
-        return await this.productModel.create(product);
+        const newProduct:Product = new this.productModel(product);
+        return await newProduct.save();
     }
 
-    // deleteById(productId: number):boolean{
-    //     const product = this.products.find(prod => prod.id == productId);
-    //     if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado.`);
-    //     this.products = this.products.filter(product => productId != product.id);
-    //     return true;
-    // }    
+    async update(id: string, changes: UpdateProductDTO): Promise<Product>{
+        const productUpdated:Product = await this.productModel.findByIdAndUpdate(id, {$set: changes}, {new: true}).exec();
+        if(!productUpdated) throw new NotFoundException(`Producto con id: ${id} no fue encontrado`);
+        return productUpdated;
+    }
+
+    async deleteById(id: string):Promise<boolean>{
+        const removedProduct = await this.productModel.findByIdAndDelete(id).exec();
+        if(!removedProduct) throw new NotFoundException(`Producto con id: ${id} no fue encontrado`);
+        return true
+    }    
 }
