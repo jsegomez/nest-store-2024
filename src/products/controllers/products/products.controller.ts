@@ -3,11 +3,17 @@ import {
     Controller,
     Delete,
     Get,
-    Headers, HttpCode, HttpStatus, ParseIntPipe, Post, Put, Query
+    HttpCode,
+    HttpStatus,
+    Post,
+    Put,
+    Query
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { FilterProductsDTO } from 'src/products/dtos/filter-products.dto';
 
 import { CreateProdcutDTO, UpdateProductDTO } from 'src/products/dtos/product.dto';
+import { PaginationProduct } from 'src/products/entities/PaginationProduct.interface';
 import { Product } from 'src/products/entities/product.entity';
 import { ProductService } from 'src/products/services/product/product.service';
 import { MongoIdPipe } from 'src/shared/pipes/mongo-id/mongo-id.pipe';
@@ -20,8 +26,8 @@ export class ProductsController {
 
     @Get('all')
     @ApiOperation({ summary: "List of products" })
-    getAll(): Promise<Product[]> {
-        return this.productServ.findAll();
+    getAll(@Query() params: FilterProductsDTO): Promise<PaginationProduct> {
+        return this.productServ.findAll(params);
     }
 
     @Get('details')
