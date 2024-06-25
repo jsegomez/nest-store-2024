@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery } from 'mongoose';
 import { FilterProductsDTO } from 'src/products/dtos/filter-products.dto';
 import { PaginationProduct } from 'src/products/entities/PaginationProduct.interface';
+import { filter } from 'rxjs';
 
 
 @Injectable()
@@ -15,9 +16,9 @@ export class ProductService {
 
     async findAll(params: FilterProductsDTO): Promise<PaginationProduct> {
         const filters: FilterQuery<Product> = {}
-        const { limit, page, minPrice, maxPrice, name } = params;
+        const { limit, page, minPrice, maxPrice, name } = params;        
         if(minPrice) filters.price = {$gte: minPrice, $lte: maxPrice}
-        if(name) filters.name = { $regex: name, $options: "i"} 
+        if(name) filters.name = { $regex: name, $options: "i"}
         
         const [quantityProducts, products] = await Promise.all([
             this.productModel.countDocuments(filters).exec(),

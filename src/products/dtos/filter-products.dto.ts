@@ -1,3 +1,4 @@
+import { Optional } from "@nestjs/common";
 import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Min, MinLength, ValidateIf } from "class-validator";
 
 export class FilterProductsDTO{
@@ -9,10 +10,10 @@ export class FilterProductsDTO{
     @IsNumber()    
     @IsNotEmpty()        
     readonly page: number;
-
-    @IsOptional()
-    @Min(0)
-    minPrice: number;
+    
+    @Min(0)    
+    @Optional()
+    minPrice: number = 0.0001;
    
     @IsPositive()
     @ValidateIf( (params) => params.minPrice)

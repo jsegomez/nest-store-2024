@@ -6,6 +6,7 @@ import { ProductsController } from './controllers/products/products.controller';
 import { ProductService } from './services/product/product.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Product, ProductSchema } from './entities/product.entity';
+import { Brand, BrandSchema } from './entities/brand.entity';
 
 @Module({
     controllers: [
@@ -24,6 +25,10 @@ import { Product, ProductSchema } from './entities/product.entity';
             {
                 name: Product.name,
                 schema: ProductSchema
+            },
+            {
+                name: Brand.name,
+                schema: BrandSchema
             }
         ])
     ]
