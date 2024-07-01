@@ -22,7 +22,7 @@ export class ProductService {
         
         const [quantityProducts, products] = await Promise.all([
             this.productModel.countDocuments(filters).exec(),
-            this.productModel.find(filters).skip(page * limit).limit(limit).exec()
+            this.productModel.find(filters).skip(page * limit).limit(limit).populate('brand').exec()
         ]);
 
         const calculateTotalPages = (Math.ceil((quantityProducts / limit)) - 1)
@@ -44,7 +44,9 @@ export class ProductService {
     }
 
     async findOne(productId: string): Promise<Product> {
-        return await this.productModel.findById(productId).exec();
+        const product = await this.productModel.findById(productId).populate('brand').populate('category').exec();
+        if(!product) throw new NotFoundException(`Producto con id: ${productId} no fue encontrado`);
+        return product;
     }
 
     async create(product: CreateProdcutDTO): Promise<Product> {

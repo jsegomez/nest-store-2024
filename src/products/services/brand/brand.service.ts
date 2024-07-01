@@ -15,7 +15,7 @@ export class BrandService {
     }
 
     async findById(id: string):Promise<Brand>{
-        const brand = await this.brandModel.findById(id).exec();
+        const brand = await this.brandModel.findById(id).exec();        
         if(!brand) throw new NotFoundException(`Producto con id: ${id} no fue encontrado`);
         return brand;
     }
