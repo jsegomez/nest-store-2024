@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, ParseIntPipe, Post, Query } from '@nestjs/common';
-import { CreateUserDTO } from 'src/users/dtos/user.dto';
-import { Order } from 'src/users/entities/order.entity';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
+import { MongoIdPipe } from 'src/shared/pipes/mongo-id/mongo-id.pipe';
+import { CreateUserDTO, UpdateUserDTO } from 'src/users/dtos/user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserService } from 'src/users/services/user/user.service';
 
@@ -11,23 +11,23 @@ export class UserController {
     ){}
 
     @Get('all')
-    getAll():User[]{
-        return this.userServ.findAll();
+    async getAll():Promise<User[]>{
+        return await this.userServ.findAll();
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    createUser(@Body() data: CreateUserDTO):User{        
-        return this.userServ.create(data);
+    async createUser(@Body() data: CreateUserDTO):Promise<User>{        
+        return await this.userServ.createUser(data);
+    }
+
+    @Put()    
+    async update(@Query('id', MongoIdPipe) id: string, @Body() data: UpdateUserDTO):Promise<User>{        
+        return await this.userServ.update(id, data);
     }
 
     @Get('details')
-    getUserById(@Query('id', ParseIntPipe) id: number):User{
-        return this.userServ.findOne(id);
+    async getUserById(@Query('id', MongoIdPipe) id: string):Promise<User>{
+        return this.userServ.findById(id);
     }
-
-    // @Get('orders')
-    // getOrders(@Query('id', ParseIntPipe) id: number):Order{
-    //     return this.userServ.getOrdersByUser(id);
-    // }
 }

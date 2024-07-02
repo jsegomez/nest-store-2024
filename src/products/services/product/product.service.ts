@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery } from 'mongoose';
 import { FilterProductsDTO } from 'src/products/dtos/filter-products.dto';
 import { PaginationProduct } from 'src/products/entities/PaginationProduct.interface';
-import { filter } from 'rxjs';
 
 
 @Injectable()
