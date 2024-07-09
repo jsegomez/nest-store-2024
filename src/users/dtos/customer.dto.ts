@@ -19,6 +19,7 @@ export class CreateCustomerDto{
     @IsNotEmpty()
     readonly email: string;
 
+    @IsNotEmpty()
     @IsArray()
     @ValidateNested({each: true})
     @Type(() => PetDto)

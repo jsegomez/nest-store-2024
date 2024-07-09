@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { Pet } from "./pets.entity";
+import { Pet, PetSchema } from "./pets.entity";
 
 @Schema()
 export class Customer extends Document{
@@ -16,7 +16,7 @@ export class Customer extends Document{
     @Prop({type: String, required: true, unique: true})
     email: string;
 
-    @Prop({ type: [Pet] })
+    @Prop({ type: [PetSchema] })
     pets: Types.Array<Pet>
 }
 
