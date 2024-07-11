@@ -12,3 +12,5 @@ export class CreateBrandDTO{
 }
 
 export class UpdateBrandDTO extends PartialType(CreateBrandDTO){}
+
+

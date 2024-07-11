@@ -8,15 +8,20 @@ import { User, UserSchema } from './entities/user.entity';
 import { Customer, CustomerSchema } from './entities/customer.entity';
 import { CustomerService } from './services/customer/customer.service';
 import { CustomerController } from './controllers/customer/customer.controller';
+import { OrdersController } from './controllers/orders/orders.controller';
+import { Order, OrderSchema } from './entities/order.entity';
+import { OrderService } from './services/order/order.service';
 
 @Module({
     controllers: [
         UserController,
-        CustomerController
+        CustomerController,
+        OrdersController,
     ],
     providers: [
         UserService,
-        CustomerService
+        CustomerService,
+        OrderService
     ],
     imports:[
        ProductsModule ,
@@ -28,6 +33,10 @@ import { CustomerController } from './controllers/customer/customer.controller';
         {
             name: Customer.name,
             schema: CustomerSchema
+        },
+        {
+            name: Order.name,
+            schema: OrderSchema
         },
        ])
     ]

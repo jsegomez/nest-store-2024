@@ -17,7 +17,7 @@ export class FilterProductsDTO{
    
     @IsPositive()
     @ValidateIf( (params) => params.minPrice)
-    maxPrice: number;
+    maxPrice: number = 100000;
 
     @IsOptional()
     @MinLength(2)
